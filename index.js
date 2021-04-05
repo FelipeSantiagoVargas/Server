@@ -8,7 +8,7 @@ let hours, minutes, seconds = 0;
 let dateServer = new Date();
 
 //settings
-app.set('port', process.env.PORT || 3006);
+app.set('port', process.env.PORT || 3000);
 
 //static files
 app.use(express.static(path.join(__dirname,'public')))
