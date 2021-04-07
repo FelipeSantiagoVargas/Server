@@ -4,7 +4,6 @@ const express = require('express');
 const app = express();
 const cors = require('cors')
 
-let hours, minutes, seconds = 0;
 let dateServer = new Date();
 
 //settings
@@ -41,9 +40,14 @@ app.post('/currentTime',(req,res)=>{
 })
 
 app.post('/adjust',(req,res)=>{
-    console.log(req.body)
-    console.log(req.body.data)
+    let aux = new Date(dateServer);
     dateServer.setMilliseconds(dateServer.getMilliseconds()+req.body.data)
+    let info = {
+        actualDate: aux,
+        adjust: req.body.data/1000,
+        newDate : dateServer
+    }
+    io.sockets.emit('info', info)
     res.json({message:"Hora ajustada correctamente"})
 })
 
@@ -55,7 +59,16 @@ io.on('connection', (socket)=>{
     console.log('New Connection',socket.id)
 
     socket.on('date',(data)=>{
-        dateServer.setHours(parseInt(data.hours),parseInt(data.minutes));
+        let aux = new Date(dateServer);
+        data.hours = parseInt(data.hours) + 5;
+        console.log(data)
+        dateServer.setHours(parseInt((data.hours)),parseInt(data.minutes));
+        let info = {
+            actualDate: aux,
+            adjust: (dateServer-aux)/1000,
+            newDate : dateServer
+        }
+        io.sockets.emit('info', info)
     })
 });
 
