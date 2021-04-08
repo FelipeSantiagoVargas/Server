@@ -19,7 +19,7 @@ app.use(express.json())
 const server = app.listen(app.get('port'),()=>{
     // console.log(`Este es la ip de alguien ${app.request.ip}`)
     // console.log(`Este es la ips alguien ${app.request.ip}`)
-    axios.post('http://172.20.0.2:3000/register',{
+    axios.post('http://172.17.0.1:3000/register',{
         port: app.get('port'),
         ip: '',
     }).then(response=>{
